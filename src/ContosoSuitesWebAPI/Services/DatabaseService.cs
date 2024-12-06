@@ -15,6 +15,9 @@ public class DatabaseService : IDatabaseService
     /// <summary>
     /// Get all hotels from the database.
     /// </summary>
+    
+    [KernelFunction]
+    [Description("Get all hotels.")]
     public async Task<IEnumerable<Hotel>> GetHotels()
     {
         var sql = "SELECT HotelID, HotelName, City, Country FROM dbo.Hotel";
@@ -43,8 +46,11 @@ public class DatabaseService : IDatabaseService
     /// <summary>
     /// Get a specific hotel from the database.
     /// </summary>
-    public async Task<IEnumerable<Booking>> GetBookingsForHotel(int hotelId)
-    {
+
+[KernelFunction]
+[Description("Get all bookings for a single hotel.")]
+public async Task<IEnumerable<Booking>> GetBookingsForHotel(int hotelId)
+{
         var sql = "SELECT BookingID, CustomerID, HotelID, StayBeginDate, StayEndDate, NumberOfGuests FROM dbo.Booking WHERE HotelID = @HotelID";
         using var conn = new SqlConnection(
             connectionString: Environment.GetEnvironmentVariable("SQLAZURECONNSTR_ContosoSuites")!
@@ -71,8 +77,12 @@ public class DatabaseService : IDatabaseService
         return bookings;
     }
 
-    public async Task<IEnumerable<Booking>> GetBookingsMissingHotelRooms()
-    {
+    
+
+[KernelFunction]
+[Description("Get missing hotel rooms.")]
+public async Task<IEnumerable<Booking>> GetBookingsMissingHotelRooms()
+{
         var sql = """
             SELECT
                 b.BookingID,
@@ -114,6 +124,9 @@ public class DatabaseService : IDatabaseService
         return bookings;
     }
 
+    
+    [KernelFunction]
+    [Description("Get Bookings With Multiple Hotel Rooms.")]
     public async Task<IEnumerable<Booking>> GetBookingsWithMultipleHotelRooms()
     {
         var sql = """
@@ -162,6 +175,11 @@ public class DatabaseService : IDatabaseService
     /// <summary>
     /// Get bookings for a specific hotel that are after a specified date.
     /// </summary>
+
+
+ 
+ [KernelFunction]
+    [Description("Get booking by hotel and minimum date.")]
     public async Task<IEnumerable<Booking>> GetBookingsByHotelAndMinimumDate(int hotelId, DateTime dt)
     {
         var sql = "SELECT BookingID, CustomerID, HotelID, StayBeginDate, StayEndDate, NumberOfGuests FROM dbo.Booking WHERE HotelID = @HotelID AND StayBeginDate >= @StayBeginDate";
